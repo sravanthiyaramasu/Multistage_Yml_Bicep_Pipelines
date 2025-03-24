@@ -4,16 +4,16 @@ param apimName string
 param functionAppName string
 param functionAppResourceId string
 param skuName string = 'Developer' // SKU options: Developer, Basic, Standard, Premium
-param publisherEmail string = 'balaih3pothula@gmail.com'
-param publisherName string = 'Sravanthi'
-param clientId string = '598aeadf-bc09-4573-950b-6ed0462b3168'
-param clientSecret string = 'V-d8Q~EyDTvNbIyawMTk1NErUjjgXZdPWKdJwbVB'
+param publisherEmail string = 'publisherEmail'
+param publisherName string = 'publisherName'
+param clientId string = 'clientId'
+param clientSecret string = 'clientSecret'
 
 @minLength(6)
 @maxLength(50)
-param apimAdminUsername string = 'Sravanthi'
+param apimAdminUsername string = 'apimAdminUsername'
 @secure()
-param apimAdminPassword string = 'Sravanthi@123'
+param apimAdminPassword string = 'apimAdminPassword'
 
 // Define the API Management service
 resource apiManagement 'Microsoft.ApiManagement/service@2021-08-01' = {
@@ -26,7 +26,7 @@ resource apiManagement 'Microsoft.ApiManagement/service@2021-08-01' = {
   properties: {
     publisherEmail: publisherEmail
     publisherName: publisherName
-    notificationSenderEmail: 'balaih3pothula@gmail.com'
+    notificationSenderEmail: 'notificationSenderEmail'
   }
   identity: {
     type: 'SystemAssigned'
@@ -50,12 +50,12 @@ resource oauth2 'Microsoft.ApiManagement/service/authorizationServers@2021-08-01
   properties: {
     clientId: clientId
     clientSecret: clientSecret
-    authorizationEndpoint: 'https://login.microsoftonline.com/5845c03f-fab4-45d5-9d5c-e05c96103e19/oauth2/v2.0/authorize'
-    tokenEndpoint: 'https://login.microsoftonline.com/5845c03f-fab4-45d5-9d5c-e05c96103e19/oauth2/v2.0/token'
+    authorizationEndpoint: 'authorizationEndpoint'
+    tokenEndpoint: 'tokenEndpoint'
     clientRegistrationEndpoint: 'https://localhost' // Placeholder, replace with actual URL or a valid URL
     grantTypes: ['authorizationCode']
     displayName: 'My OAuth2 Server'
-    defaultScope: 'api://0d9c8d31-fd17-4bd6-a879-d164282de5d9'
+    defaultScope: 'defaultScope'
     bearerTokenSendingMethods: ['authorizationHeader']
     authorizationMethods: ['GET','POST'] // Specify the allowed authorization methods
   }
