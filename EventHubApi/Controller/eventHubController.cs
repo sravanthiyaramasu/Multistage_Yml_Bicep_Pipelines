@@ -16,8 +16,8 @@ namespace EventHubApi.Controller
 		private readonly ILogger<EventHubListenerService> _logger;
 		private readonly BlobServiceClient _blobServiceClient;
 		private readonly string _containerName = "apiappcontainer"; // Name of the blob container
-		private readonly string _eventHubConnectionString = "Endpoint=sb://ns-logicapptohub-dev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=6RtmUyiGUOUWaUFeMQP5MMmmwjLn37eJI+AEhK+GGew=;EntityPath=evnthubtola";
-		private readonly string _eventHubName = "evnthubtola";
+		private readonly string _eventHubConnectionString = "EventBubConnectionstring";
+		private readonly string _eventHubName = "evntHubName";
 		private readonly string _consumerGroup = "$Default";
 		private EventHubConsumerClient _consumerClient;
 		private readonly TelemetryClient _telemetryClient;
