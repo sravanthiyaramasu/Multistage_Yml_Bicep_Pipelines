@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34916.146
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FunctionApp", "FunctionApp", "{9D040788-9CE1-4495-ACC5-41DA6ADBABB6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionApp", "FunctionApp\FunctionApp.csproj", "{E7D97568-EB8C-48E1-B662-12224994127C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{917AC9C6-BA02-48CB-BB57-2CF2BA694BC9}"
+	ProjectSection(SolutionItems) = preProject
+		HM_Infrastructure\Pipelines-ci -cd.yml = HM_Infrastructure\Pipelines-ci -cd.yml
+		HM_Infrastructure\Stage-Deployment.yml = HM_Infrastructure\Stage-Deployment.yml
+		HM_Infrastructure\Steps-Bicep-Validation.yml = HM_Infrastructure\Steps-Bicep-Validation.yml
+		HM_Infrastructure\Steps-Build.yml = HM_Infrastructure\Steps-Build.yml
+		HM_Infrastructure\Steps-Release.yml = HM_Infrastructure\Steps-Release.yml
+		HM_Infrastructure\vars.yml = HM_Infrastructure\vars.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{60B9A5B5-9F5B-4446-9336-93CC58CFAF5D}"
+	ProjectSection(SolutionItems) = preProject
+		HM_Infrastructure\Modules\apiManagement.bicep = HM_Infrastructure\Modules\apiManagement.bicep
+		HM_Infrastructure\Modules\applicationInsights.bicep = HM_Infrastructure\Modules\applicationInsights.bicep
+		HM_Infrastructure\Modules\az-resources.bicep = HM_Infrastructure\Modules\az-resources.bicep
+		HM_Infrastructure\Modules\eventGridTopic.bicep = HM_Infrastructure\Modules\eventGridTopic.bicep
+		HM_Infrastructure\Modules\eventHub.bicep = HM_Infrastructure\Modules\eventHub.bicep
+		HM_Infrastructure\Modules\functionApp.bicep = HM_Infrastructure\Modules\functionApp.bicep
+		HM_Infrastructure\Modules\functionAppConnections.bicep = HM_Infrastructure\Modules\functionAppConnections.bicep
+		HM_Infrastructure\Modules\hostingPlan.bicep = HM_Infrastructure\Modules\hostingPlan.bicep
+		HM_Infrastructure\Modules\Parameter.json = HM_Infrastructure\Modules\Parameter.json
+		HM_Infrastructure\Modules\retriveKeys.bicep = HM_Infrastructure\Modules\retriveKeys.bicep
+		HM_Infrastructure\Modules\serviceBusNamespace.bicep = HM_Infrastructure\Modules\serviceBusNamespace.bicep
+		HM_Infrastructure\Modules\setSecret.bicep = HM_Infrastructure\Modules\setSecret.bicep
+		HM_Infrastructure\Modules\storageAccount.bicep = HM_Infrastructure\Modules\storageAccount.bicep
+		HM_Infrastructure\Modules\UpdateFunctionAppSettings.bicep = HM_Infrastructure\Modules\UpdateFunctionAppSettings.bicep
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventHubApi", "EventHubApi\EventHubApi.csproj", "{F1D64BDB-C90C-4D0B-AFC5-28EBD4EBFB4F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E7D97568-EB8C-48E1-B662-12224994127C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7D97568-EB8C-48E1-B662-12224994127C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7D97568-EB8C-48E1-B662-12224994127C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7D97568-EB8C-48E1-B662-12224994127C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1D64BDB-C90C-4D0B-AFC5-28EBD4EBFB4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1D64BDB-C90C-4D0B-AFC5-28EBD4EBFB4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1D64BDB-C90C-4D0B-AFC5-28EBD4EBFB4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1D64BDB-C90C-4D0B-AFC5-28EBD4EBFB4F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E7D97568-EB8C-48E1-B662-12224994127C} = {9D040788-9CE1-4495-ACC5-41DA6ADBABB6}
+		{60B9A5B5-9F5B-4446-9336-93CC58CFAF5D} = {917AC9C6-BA02-48CB-BB57-2CF2BA694BC9}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1C00C377-609D-4659-BF8B-89CA5E2F4767}
+	EndGlobalSection
+EndGlobal
