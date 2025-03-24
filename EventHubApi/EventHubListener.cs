@@ -13,9 +13,9 @@ public class EventHubListenerService : BackgroundService
 {
 	private readonly ILogger<EventHubListenerService> _logger;
 	private readonly BlobServiceClient _blobServiceClient;
-	private readonly string _containerName = "apiappcontainer"; // Name of the blob container
-	private readonly string _eventHubConnectionString= "Endpoint=sb://ns-logicapptohub-dev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=6RtmUyiGUOUWaUFeMQP5MMmmwjLn37eJI+AEhK+GGew=;EntityPath=evnthubtola";
-	private readonly string _eventHubName = "evnthubtola";
+	private readonly string _containerName = ""; // Name of the blob container
+	private readonly string _eventHubConnectionString= "EventHubConnectionString";
+	private readonly string _eventHubName = "evnthubName";
 	private readonly string _consumerGroup = "$Default";
 	private EventHubConsumerClient _consumerClient;
 	private readonly TelemetryClient _telemetryClient;	
