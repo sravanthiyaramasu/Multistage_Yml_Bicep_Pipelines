@@ -1,0 +1,109 @@
+variables:
+
+  - name: poolName    
+    value: 'Self-hosted-agent'
+
+  - name: solutionPath    
+    value: 'HM_FuncApp'
+
+  - name: name    
+    value: 'hmfuncapp'
+
+  - name: country    
+    value: 'se'
+
+  - name: buildPlatform    
+    value: 'Any CPU'
+
+  - name: buildConfiguration    
+    value: 'Release'
+
+  - name: restoreBuildProjects    
+    value: '**/*.csproj'
+
+  - name: artifactName    
+    value: 'drop'
+
+  - name: testProjects    
+    value: '**/*[Tt]ests/*.csproj'
+
+  - name: location    
+    value: 'WestEurope'
+
+  - name: resourceGroupName    
+    value: 'rg-$(country)-$(name)-'
+
+  - name: FuncAppName    
+    value: 'func-$(country)-$(name)-'  
+
+  - name: storageAccountName    
+    value: 'st$(country)$(name)' 
+
+  - name: storageAccountType    
+    value: 'Standard_LRS'
+  
+  - name: bicep    
+    value: '/HM_FuncApp/HM_Infrastructure/Modules/'
+
+  - name: appType 
+    value: 'functionApp'
+
+  - name: app 
+    value: 'function'
+
+  - name : slot
+    value : production
+
+  - name: templateFile
+    value : '**/*/az-resources.bicep'
+
+  - name   : csmParametersFile
+    value  : '**/*/Parameter.json' 
+
+  - name: serviceBusNamespaceName    
+    value: 'ns-$(country)-$(name)-'
+
+  - name: serviceBusQueueName    
+    value: 'q-$(country)-$(name)-'
+  
+  - name: containerName     
+    value: 'container-$(country)-$(name)-'
+
+  - name: hostingPlanName     
+    value: 'hp-$(country)-$(name)-'
+
+  - name: applicationInsightsName     
+    value: 'appi-$(country)-$(name)-'
+  
+  - name: keyVaultName 
+    value: 'kv-whole-dev'
+  
+  - name: keyVaultResourceGroup 
+    value: 'rg-common-dev'
+
+  - name: managedIdentityName
+    value: 'mi-$(country)-$(name)-'
+
+  - name: topicName
+    value: 'topic-$(country)-$(name)-'
+
+  - name: eventHubNamespaceName
+    value: 'evnthbns-$(country)-$(name)-'
+
+  - name: eventHubName
+    value: 'evnthb-$(country)-$(name)-'
+
+  - name: apiname    
+    value: 'hmapiapp'
+
+  - name: ApiAppName
+    value: 'Apiapp-$(country)-$(apiname)-'
+
+  - name: appServicePlanName
+    value: 'asp-$(country)-$(apiname)-'
+
+  - name: apiappType 
+    value: 'apiApp'
+
+  - name: apimName 
+    value: 'apimn-$(country)-$(apiname)-'

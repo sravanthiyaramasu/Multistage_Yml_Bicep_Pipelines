@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "FuncAppName": {
+      "value": ""
+    },
+    "Env": {
+      "value": ""
+    },
+
+    "Location": {
+      "value": ""
+    },
+    "App": {
+      "value": ""
+    },
+    "AppType": {
+      "value": ""
+    },
+    "serviceBusNamespaceName": {
+      "value": ""
+    },
+    "serviceBusQueueName": {
+      "value": ""
+    },
+    "storageAccountName": {
+      "value": ""
+    },
+    "containerName": {
+      "value": ""
+    },
+    "hostingPlanName": {
+      "value": ""
+    },
+    "applicationInsightsName": {
+      "value": ""
+    },
+    "keyVaultName": {
+      "value": ""
+    },
+    "keyVaultResourceGroup": {
+      "value": ""
+    },
+    "managedIdentityName": {
+      "value": ""
+    }
+
+  }
+}

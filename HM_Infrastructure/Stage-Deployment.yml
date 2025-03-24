@@ -1,0 +1,72 @@
+# the deployment stage of our pipeline
+
+stages:
+- stage: 'CI'
+  displayName: 'CI - Build'
+
+  pool:
+      name: $(poolName)
+
+  jobs:
+  - job: Build
+    steps:
+    - template: Steps-Build.yml
+  
+# - stage: 'Validate'
+#   dependsOn: CI
+#   condition: succeeded()
+
+#   pool:
+#       name: $(poolName)
+#   jobs: 
+#   - job: ValidateBicepTemplate
+#     steps:
+#     - template: Steps-Bicep-Validation.yml
+  
+- stage: 'Dev'
+  displayName: 'CD - Release To Dev'
+  dependsOn: CI
+  condition: succeeded()
+
+  pool:
+      name: $(poolName)
+
+  jobs:  
+  - job: Release_to_Dev
+    steps:
+    - template: Steps-Release.yml
+      parameters: 
+        variableGroup: 'DevVariableGroup'
+        env: 'dev'
+
+
+# - stage: 'Test'
+#   displayName: 'Release To Test'
+#   dependsOn: Dev
+
+#   pool:
+#       name: $(poolName)
+
+#   jobs:
+#   - job: Release_to_Test
+#     steps:
+#     - template: Steps-Release.yml
+#       parameters: 
+#         variableGroup: 'TestVariableGroup'
+#         env: 'test'
+
+# - stage: 'Prod'
+#   displayName: 'Release To Prod'
+#   dependsOn: Test
+
+#   pool:
+#       name: $(poolName)
+
+#   jobs:
+#   - job: Release_to_Prod
+#     steps:
+#     - template: Steps-Release.yml
+#       parameters: 
+#         variableGroup: 'TestVariableGroup'
+#         env: 'prod'
+

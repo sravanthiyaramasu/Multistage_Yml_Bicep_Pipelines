@@ -1,0 +1,44 @@
+# the build stage of our pipeline 
+  
+steps:  
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Downloading Artifact'
+      inputs:
+        buildType: 'current'
+        artifactName: $(artifactName)
+        targetPath: $(System.ArtifactsDirectory) 
+    
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(serviceConnection)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+           az bicep build --file $(System.ArtifactsDirectory)/$(templateFile)
+           name: LintBicepCode
+           displayName: Run Bicep linter
+    # - script: |
+    #       az bicep build --file $(System.ArtifactsDirectory)/$(templateFile)
+    #       name: LintBicepCode
+    #       displayName: Run Bicep linter
+
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Subscription'
+        azureResourceManagerConnection: '$(serviceConnection)'
+        location: '$(location)'
+        templateLocation: 'Linked artifact'
+        csmFile: '$(System.ArtifactsDirectory)/$(templateFile)'
+        csmParametersFile: '$(System.ArtifactsDirectory)/$(csmParametersFile)'
+        deploymentMode: 'Validation'  
+
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '$(serviceConnection)'
+        scriptType: 'PowerShell'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az deployment sub what-if \
+            --template-file $(System.ArtifactsDirectory)/$(templateFile) \
+            --parameters '$(System.ArtifactsDirectory)/$(csmParametersFile)' \
+            --location '$(location)'

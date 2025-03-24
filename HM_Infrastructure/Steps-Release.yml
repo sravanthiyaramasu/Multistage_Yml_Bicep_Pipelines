@@ -1,0 +1,229 @@
+# the release stage of our pipeline 
+
+parameters:
+  variableGroup: ''
+  env : '' 
+
+steps:
+-  download: none
+
+-  task: DownloadPipelineArtifact@2
+   displayName: 'Downloading Artifact'
+   inputs:
+     buildType: 'current'
+     artifactName: $(artifactName)
+     targetPath: $(System.ArtifactsDirectory) 
+
+
+# -  task: AzureCLI@2
+#    displayName: 'Deploy Bicep Infrastructure'
+#    inputs:
+#       azureSubscription: $(serviceConnection)
+#       scriptType: 'PowerShell'
+#       scriptLocation: 'inlineScript'
+#       useGlobalConfig: false
+#       inlineScript: |           
+#            az group create --name $(resourceGroupName)${{parameters.env}}  --location $(location)       
+         
+#       # scriptArguments:                  
+#       #           --parameters FuncAppName=$(FuncAppName)${{parameters.env}} 
+#       #           --parameters Env=${{parameters.env}} 
+#       #           --parameters Location=$(location) 
+#       #           --parameters App=$(app) 
+#       #           --parameters AppType=$(appType)
+#       #           --parameters location='centralus' 
+#       powerShellErrorActionPreference: 'stop'
+#       displayName: 'Deploy Bicep Template'
+
+# -  task: AzureCLI@2
+#    displayName: 'Bicep Deployment' 
+#    inputs:
+#       azureSubscription: $(serviceConnection)
+#       scriptType: 'PowerShell'
+#       scriptLocation: 'inlineScript'
+#       useGlobalConfig: false
+#       inlineScript: |           
+#            az deployment group create \
+#            --resource-group $(resourceGroupName)${{parameters.env}} \
+#            --template-file $(Build.ArtifactStagingDirectory)/$(bicep)/az-serviceBus.bicep \
+#            --parameters @$(Build.ArtifactStagingDirectory)/$(bicep)/Parameter.json \
+#            --parameters FuncAppName='$(FuncAppName)${{parameters.env}}' Env='${{parameters.env}}' App='$(app)' AppType='$(appType)' serviceBusNamespaceName='$(serviceBusNamespaceName)${{parameters.env}}' serviceBusQueueName='$(serviceBusQueueName)${{parameters.env}}' location='centralus'
+           
+#       # scriptArguments:                  
+#       #           --parameters FuncAppName='$(FuncAppName)${{parameters.env}}' 
+#       #           --parameters Env='${{parameters.env}}' 
+#       #           --parameters App='$(app)' 
+#       #           --parameters AppType='$(appType)'
+#       #           --parameters serviceBusNamespaceName='$(serviceBusNamespaceName)${{parameters.env}}'
+#       #           --parameters serviceBusQueueName='$(serviceBusQueueName)${{parameters.env}}'
+#       #           --parameters location='centralus'
+#       powerShellErrorActionPreference: 'stop'
+#       displayName: ' Bicep Deploy'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'BicepDeploy'
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: '$(serviceConnection)'
+    subscriptionId: '$(subscriptionId)'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '$(resourceGroupName)${{parameters.env}}'
+    location: '$(location)'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/$(templateFile)'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/$(csmParametersFile)'
+    overrideParameters: '-FuncAppName $(FuncAppName)${{parameters.env}} -Env ${{parameters.env}} 
+                         -Location $(location) -App $(app) -AppType $(appType) -serviceBusNamespaceName $(serviceBusNamespaceName)${{parameters.env}} 
+                         -serviceBusQueueName $(serviceBusQueueName)${{parameters.env}} -storageAccountName $(storageAccountName)${{parameters.env}} 
+                         -containerName $(containerName)${{parameters.env}} -hostingPlanName $(hostingPlanName)${{parameters.env}} 
+                         -applicationInsightsName $(applicationInsightsName)${{parameters.env}} -keyVaultResourceGroup $(keyVaultResourceGroup) 
+                         -keyVaultName $(keyVaultName) -managedIdentityName $(managedIdentityName)${{parameters.env}} -topicName $(topicName)${{parameters.env}}
+                         -apimName $(apimName)${{parameters.env}}'
+    deploymentMode: 'Incremental'
+    deploymentName: 'DeployPipelineTemplate'
+    # outputs:    
+    # deploymentOutputs: deploymentOutputs
+
+# - script: |
+#     echo '$(deploymentOutputs)' > $(Build.ArtifactStagingDirectory)/deploymentOutputs.json
+    
+
+# - publish: $(Build.ArtifactStagingDirectory)/deploymentOutputs.json
+#   artifact: deploymentOutputs
+# - task: AzurePowerShell@5
+#   displayName: 'Retrieve the Event Grid endpoint and key'
+#   inputs:
+#       azureSubscription: $(serviceConnection)
+#       scriptType: 'PowerShell'
+#       scriptLocation: 'inlineScript'      
+#       inlineScript:
+#           # Define the resource group and topic name with the environment suffix
+#           $resourceGroupName = "$(resourceGroupName)${{parameters.env}}"
+#           $topicName = "$(topicName)${{parameters.env}}"
+#           $FuncAppName = "$(FuncAppName)${{parameters.env}}"
+#           $topic_keys = az eventgrid topic key list --resource-group $resourceGroupName --name $topicName  --query "key1" 
+           
+#           $end_point = az eventgrid topic show --resource-group $resourceGroupName --name $topicName  --query "endpoint" 
+      
+        
+           
+#           az functionapp config appsettings set --name $FuncAppName --resource-group $resourceGroupName --settings "EVENT_GRID_TOPIC_KEY=$topic_keys"
+
+#           az functionapp config appsettings set --name $FuncAppName --resource-group $resourceGroupName --settings "EVENT_GRID_TOPIC_ENDPOINT=$end_point"
+
+#       azurePowerShellVersion: 'LatestVersion' 
+
+#       displayName: ' Retrieve the Event Grid endpoint and key'
+
+# - task: AzureCLI@2
+#   displayName: 'Retrieve the Event Grid endpoint and key'
+#   inputs:
+#       azureSubscription: $(serviceConnection)
+#       scriptType: 'PowerShell'
+#       scriptLocation: 'inlineScript'      
+#       inlineScript:
+#         $topic_keys = az eventgrid topic key list --resource-group $(resourceGroupName)${{parameters.env}} --name $(topicName)${{parameters.env}}  --query "key1" 
+           
+#         $end_point = az eventgrid topic show --resource-group $(resourceGroupName)${{parameters.env}} --name $(topicName)${{parameters.env}}  --query "endpoint" 
+      
+        
+           
+#         az functionapp config appsettings set --name $(FuncAppName)${{parameters.env}} --resource-group $(resourceGroupName)${{parameters.env}} --settings EVENT_GRID_TOPIC_KEY=$topic_keys
+
+#         az functionapp config appsettings set --name $(FuncAppName)${{parameters.env}} --resource-group $(resourceGroupName)${{parameters.env}} --settings EVENT_GRID_TOPIC_ENDPOINT=$end_point
+
+      
+
+#       displayName: ' Retrieve the Event Grid endpoint and key'
+
+
+   
+
+- task: AzureFunctionApp@1
+  displayName: 'Deploy Azure Function App'
+  inputs:
+     azureSubscription: '$(serviceConnection)'              
+     appType: '$(appType)'
+     ResourceGroupName: '$(resourceGroupName)${{parameters.env}}'
+     appName: '$(FuncAppName)${{parameters.env}}'
+     deployToSlotOrASE: true
+     SlotName: '$(slot)'              
+     package: '$(Build.ArtifactStagingDirectory)/**/$(appType).zip'
+
+
+# - task: AzureAppServiceManage@0
+#   displayName: 'Swap Slots Stage to Prod'
+#   inputs: 
+#      azureSubscription : $(serviceconnection)
+#      WebAppName: '$(FuncAppName)${{parameters.env}}'
+#      ResourceGroupName: '$(resourceGroupName)${{parameters.env}}'
+#      SourceSlot: $(slot) 
+
+# - download: current
+#   artifact: deploymentOutputs 
+# - powershell: |
+#    Get-Content -Path "$(Build.ArtifactStagingDirectory)\deploymentOutputs\deploymentOutputs.json"
+#   displayName: 'Read deployment outputs file'  
+# - powershell: |
+#         $json = Get-Content -Raw -Path "$(Build.ArtifactStagingDirectory)\deploymentOutputs\deploymentOutputs.json" | ConvertFrom-Json
+#         $functionAppEndpoint = $json.properties.outputs.functionAppEndpoint.value
+#   displayName: 'Extract and set deployment outputs'
+
+# - task: AzureResourceManagerTemplateDeployment@3
+#   displayName: 'SubscribeEventHub'  
+#   inputs:
+#     azureResourceManagerConnection: '$(serviceConnection)'
+#     subscriptionId: '$(subscriptionId)'
+#     action: 'Create Or Update Resource Group'
+#     resourceGroupName: '$(resourceGroupName)${{parameters.env}}'
+#     location: '$(location)'
+#     templateLocation: 'Linked artifact'
+#     csmFile: '$(System.DefaultWorkingDirectory)/**/eventHub.bicep'
+#     csmParametersFile: ''    
+#     deploymentMode: 'Incremental'    
+#     deploymentName: 'DeployPipelineTemplate'
+#     overrideParameters : '-location $(location) -FuncAppName $(FuncAppName)${{parameters.env}} -ApiAppName $(ApiAppName)${{parameters.env}} -hostingPlanName $(hostingPlanName)${{parameters.env}} -eventHubNamespaceName $(eventHubNamespaceName)${{parameters.env}} -eventHubName $(eventHubName)${{parameters.env}} -applicationInsightsName $(applicationInsightsName)${{parameters.env}} -storageAccountName $(storageAccountName)${{parameters.env}}'
+
+# - task: AzureResourceManagerTemplateDeployment@3
+#   displayName: 'SubscribeEventGrid'  
+#   inputs:
+#     azureResourceManagerConnection: '$(serviceConnection)'
+#     subscriptionId: '$(subscriptionId)'
+#     action: 'Create Or Update Resource Group'
+#     resourceGroupName: '$(resourceGroupName)${{parameters.env}}'
+#     location: '$(location)'
+#     templateLocation: 'Linked artifact'
+#     csmFile: '$(System.DefaultWorkingDirectory)/**/eventGridTopic.bicep'
+#     csmParametersFile: ''    
+#     deploymentMode: 'Incremental'    
+#     deploymentName: 'DeployPipelineTemplate'
+#     overrideParameters : '-location $(location) -topicName $(topicName)${{parameters.env}} -FuncAppName $(FuncAppName)${{parameters.env}} -storageAccountName $(storageAccountName)${{parameters.env}} -eventHubNamespaceName $(eventHubNamespaceName)${{parameters.env}} -eventHubName $(eventHubName)${{parameters.env}}'
+
+
+# - task: AzureFunctionApp@1
+#   displayName: 'Deploy Azure Api App'
+#   inputs:
+#      azureSubscription: '$(serviceConnection)'              
+#      appType: '$(apiappType)'
+#      ResourceGroupName: '$(resourceGroupName)${{parameters.env}}'
+#      appName: '$(ApiAppName)${{parameters.env}}'
+#      deployToSlotOrASE: true
+#      SlotName: '$(slot)'              
+#      package: '$(Build.ArtifactStagingDirectory)/**/$(appType).zip'
+
+
+    # parameters : |
+    #    functionAppEndpoint=$(functionAppEndpoint)
+    # parameters : |
+    #    functionAppEndpoint=$(functionAppEndpoint)
+           
+# - task: AzureAppServiceManage@0
+#   displayName: 'Swap Slots Stage to LastKnownGood'
+#   inputs:  
+#      azureSubscription : $(serviceconnection)
+#      WebAppName: '$(FuncAppName)${{parameters.env}}'
+#      ResourceGroupName: '$(resourceGroupName)${{parameters.env}}'
+#      SourceSlot: $(slot)
+#      SwapWithProduction: false
+#      TargetSlot: lastKnown
+          

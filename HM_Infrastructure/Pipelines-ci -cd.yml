@@ -1,0 +1,23 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+# File: CI-CD-AzurePipelines.yml
+
+name : FuncApp-CI-CD
+trigger:
+  branches:
+    include:
+      - main
+
+# Variables to read from the parameter template
+
+variables:
+  - template: vars.yml
+  
+stages: 
+
+- template: Stage-Deployment.yml
+
+              

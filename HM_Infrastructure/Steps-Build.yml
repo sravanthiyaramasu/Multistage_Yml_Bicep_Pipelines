@@ -1,0 +1,55 @@
+# the build stage of our pipeline 
+    steps:
+     
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: restore
+        projects: $(restoreBuildProjects)
+        feedsToUse: 'select'
+
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: build
+        projects: $(restoreBuildProjects)
+        arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: Test
+      inputs:
+        command: test
+        projects: $(testProjects)
+        arguments: '--configuration $(buildConfiguration)'
+        testRunTitle: 'Unit Tests'
+
+    - task: PowerShell@2
+      displayName: 'Degug parameters'
+      inputs:
+        targetType: Inline
+        script: |
+          Write-Host "$(Build.ArtifactStagingDirectory)"
+          Write-Host "$(System.DefaultWorkingDirectory)"
+          Write-Host "$(System.ArtifactsDirectory)"
+          Write-Host "$(Pipeline.Workspace)"
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: $(System.DefaultWorkingDirectory)/$(bicep)
+        Contents: '**'
+        TargetFolder: $(Build.ArtifactStagingDirectory)/$(bicep)
+
+    - task: DotNetCoreCLI@2
+      displayName: Publish
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: $(RestoreBuildProjects)
+        arguments: --configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)
+        zipAfterPublish: True
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: $(Build.ArtifactStagingDirectory)
+        artifactName: $(artifactName)  
+
