@@ -12,16 +12,16 @@ stages:
     steps:
     - template: Steps-Build.yml
   
-# - stage: 'Validate'
-#   dependsOn: CI
-#   condition: succeeded()
+ - stage: 'Validate'
+   dependsOn: CI
+   condition: succeeded()
 
-#   pool:
-#       name: $(poolName)
-#   jobs: 
-#   - job: ValidateBicepTemplate
-#     steps:
-#     - template: Steps-Bicep-Validation.yml
+   pool:
+       name: $(poolName)
+   jobs: 
+   - job: ValidateBicepTemplate
+     steps:
+     - template: Steps-Bicep-Validation.yml
   
 - stage: 'Dev'
   displayName: 'CD - Release To Dev'
@@ -40,33 +40,33 @@ stages:
         env: 'dev'
 
 
-# - stage: 'Test'
-#   displayName: 'Release To Test'
-#   dependsOn: Dev
+ - stage: 'Test'
+   displayName: 'Release To Test'
+   dependsOn: Dev
 
-#   pool:
-#       name: $(poolName)
+   pool:
+       name: $(poolName)
 
-#   jobs:
-#   - job: Release_to_Test
-#     steps:
-#     - template: Steps-Release.yml
-#       parameters: 
-#         variableGroup: 'TestVariableGroup'
-#         env: 'test'
+   jobs:
+   - job: Release_to_Test
+     steps:
+     - template: Steps-Release.yml
+       parameters: 
+         variableGroup: 'TestVariableGroup'
+         env: 'test'
 
-# - stage: 'Prod'
-#   displayName: 'Release To Prod'
-#   dependsOn: Test
+ - stage: 'Prod'
+   displayName: 'Release To Prod'
+   dependsOn: Test
 
-#   pool:
-#       name: $(poolName)
+   pool:
+       name: $(poolName)
 
-#   jobs:
-#   - job: Release_to_Prod
-#     steps:
-#     - template: Steps-Release.yml
-#       parameters: 
-#         variableGroup: 'TestVariableGroup'
-#         env: 'prod'
+   jobs:
+   - job: Release_to_Prod
+     steps:
+     - template: Steps-Release.yml
+       parameters: 
+         variableGroup: 'TestVariableGroup'
+         env: 'prod'
 
